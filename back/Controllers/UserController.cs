@@ -8,10 +8,18 @@ namespace back.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<User>> Get()
+
+        private readonly List<User> _users = new List<User>
         {
-            return Ok(new User());
+            new User { UserId = 1, UserName = "User1" },
+            new User { UserId = 2, UserName = "User2" }
+        };
+
+        [HttpGet]
+        public async Task<ActionResult<List<User>>> Get()
+        {
+            Console.WriteLine("Entro");
+            return Ok(_users.AsQueryable());
         }
     }
 }

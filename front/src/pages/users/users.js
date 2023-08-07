@@ -24,7 +24,7 @@ const dataSource = {
   store: {
     type: 'odata',
     key: 'UserId',
-    url: 'url al backend'
+    url: 'https://localhost:7273/api/user'
   },
   select: [
     'UserId',
