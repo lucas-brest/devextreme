@@ -17,5 +17,10 @@ export const navigation = [
         path: '/tasks'
       }
     ]
+  }, 
+  {
+    text: 'Users',
+    path: '/users',
+    icon: 'group'
   }
   ];
