@@ -31,10 +31,11 @@ namespace back.Controllers
             return _users.AsQueryable();
         }
 
-        [HttpDelete("user(UserId={userId})")]
-        public IActionResult DeleteUser(int userId)
+        [HttpDelete]
+        //public IActionResult Delete([FromODataUri] int key)
+        public IActionResult Delete( int key)
         {
-            Console.WriteLine(userId);
+            Console.WriteLine(key);
             //var userToDelete = _users.FirstOrDefault(u => u.UserId == userId);
 
             //if (userToDelete == null)
