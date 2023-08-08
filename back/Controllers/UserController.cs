@@ -1,11 +1,14 @@
 ﻿using back.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Formatter;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
+using System.Diagnostics.CodeAnalysis;
 
 namespace back.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    //[Route("api/[controller]")]
     public class UserController : ControllerBase
     {
 
@@ -22,9 +25,25 @@ namespace back.Controllers
         };
 
         [HttpGet]
-        public ActionResult<IQueryable<List<User>>> Get()
+        [EnableQuery]
+        public IQueryable<User> Get()
         {
-            return Ok(_users.AsQueryable());
+            return _users.AsQueryable();
+        }
+
+        [HttpDelete("user(UserId={userId})")]
+        public IActionResult DeleteUser(int userId)
+        {
+            Console.WriteLine(userId);
+            //var userToDelete = _users.FirstOrDefault(u => u.UserId == userId);
+
+            //if (userToDelete == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //_users.Remove(userToDelete);
+            return NoContent();
         }
     }
 }
