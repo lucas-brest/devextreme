@@ -1,5 +1,7 @@
 using back.Model;
+using back.Service;
 using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 
@@ -43,6 +45,10 @@ builder.Services.AddCors(options =>
       });
 
 });
+
+builder.Services.AddTransient<UserService>();
+
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer("server=localhost\\SQLEXPRESS01; database=UserDB; Integrated Security=True; MultipleActiveResultSets=true; TrustServerCertificate=True;"));
 
 var app = builder.Build();
 

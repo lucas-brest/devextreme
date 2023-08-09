@@ -1,19 +1,12 @@
 import React from 'react';
 import './users.scss';
 import { DataGrid } from 'devextreme-react';
-import { Column, Editing, Paging } from 'devextreme-react/data-grid';
-import ODataStore from 'devextreme/data/odata/store';
+import { Column, Editing, EmailRule, Paging, ValidationRule } from 'devextreme-react/data-grid';
 import { FilterRow } from 'devextreme-react/data-grid';
 
 export default () => {
   
-  const handleRemove = (e) => {
-    // e.cancel = true;
-    // e.changes = e.changes.map(c => ({...c, key: c.key.UserId}))
-    // console.log(e.cancel());
-    e.key = e.key.UserId
-    console.log(e);
-  }
+  console.log("Reenderiza");
 
   return (
     <React.Fragment>
@@ -22,7 +15,8 @@ export default () => {
         <div className={'dx-card responsive-paddings'}>
           <DataGrid
             dataSource={dataSource}
-            onRowRemoving={handleRemove}
+            keyExpr='UserId'
+            customizeColumns={(c) => c[0].width = 60}
           >
             <Editing 
               mode='row'
@@ -31,10 +25,14 @@ export default () => {
               allowUpdating={true}
             />
             <FilterRow visible={true}/>
-            <Paging defaultPageSize={3} />
-            <Column dataField="UserId" />
-            <Column dataField="UserName" />
+            <Paging defaultPageSize={6} />
             
+            <Column dataField="UserId" caption="ID" allowEditing={false} />
+            <Column dataField="FirstName" />
+            <Column dataField="LastName" />
+            <Column dataField="Email" />
+            <Column dataField="BirthDate" />
+
           </DataGrid>
         </div>
       </div>
@@ -42,15 +40,36 @@ export default () => {
   )
 };
 
-const dataSource = new ODataStore({
-  url: 'https://localhost:7273/odata/user',  
+const dataSource = {
+  store: {
+    type: 'odata',
+    key: 'UserId',
+    keyType: {
+      UserId: 'Int32'
+    },
+    url: 'https://localhost:7273/odata/user',
+    version: 4
+  },
   select: [
     'UserId',
-    'UserName'
+    'FirstName',
+    'LastName',
+    'Email',
+    'BirthDate'
   ],
-  key: ['UserId'],
-  keyType: {
-    UserId: 'Int32'
-  },
-  version: 4
-});
+};
+
+
+// const dataSource = new ODataStore({
+//   url: 'https://localhost:7273/odata/user',  
+//   select: [
+//     'UserId',
+//     'UserName'
+//   ],
+//   key: ['UserId'],
+//   keyType: {
+//     UserId: 'Int32'
+//   },
+//   version: 4
+// });
+  

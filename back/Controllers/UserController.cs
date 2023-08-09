@@ -1,10 +1,13 @@
 ﻿using back.Model;
+using back.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using System.Diagnostics.CodeAnalysis;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace back.Controllers
 {
@@ -12,38 +15,78 @@ namespace back.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly List<User> _users = new List<User>
+        private readonly UserService _users;
+
+        public UserController(UserService userService)
         {
-            new User { UserId = 1, UserName = "User1" },
-            new User { UserId = 2, UserName = "User2" },
-            new User { UserId = 3, UserName = "User3" },
-            new User { UserId = 4, UserName = "User0" },
-            new User { UserId = 5, UserName = "User0" },
-            new User { UserId = 6, UserName = "User6" },
-            new User { UserId = 7, UserName = "Otro1" },
-            new User { UserId = 8, UserName = "Otro2" }
-        };
+            _users = userService;
+        }
 
         [HttpGet]
         [EnableQuery]
         public IQueryable<User> Get()
         {
-            return _users.AsQueryable();
+            return _users.GetAll();
         }
 
         [HttpDelete]
-        //public IActionResult Delete([FromODataUri] int key)
-        public IActionResult Delete( int key)
+        public IActionResult Delete([FromODataUri] int key)
         {
-            Console.WriteLine(key);
-            //var userToDelete = _users.FirstOrDefault(u => u.UserId == userId);
+            var userToDelete = _users.GetById(key);
 
-            //if (userToDelete == null)
-            //{
-            //    return NotFound();
-            //}
+            if (userToDelete == null)
+            {
+                return NotFound();
+            }
 
-            //_users.Remove(userToDelete);
+            _users.Delete(userToDelete.First());
+            return NoContent();
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            _users.Create(user);
+            return Created("User", user);
+        }
+
+        [HttpPut]
+        public IActionResult Put([FromODataUri] int key, [FromBody] User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (key != user.UserId)
+            {
+                return BadRequest();
+            }
+            _users.Update(user);
+            return NoContent();
+        }
+
+        [HttpPatch]
+        public IActionResult Patch([FromODataUri] int key, [FromBody] Delta<User> userDelta)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            User existingUser = _users.GetByKey(key);
+
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+
+            userDelta.Patch(existingUser);
+            _users.Update(existingUser);
+
             return NoContent();
         }
     }
