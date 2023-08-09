@@ -15,8 +15,8 @@ export default () => {
         <div className={'dx-card responsive-paddings'}>
           <DataGrid
             dataSource={dataSource}
-            keyExpr='UserId'
             customizeColumns={(c) => c[0].width = 60}
+            // keyExpr='UserId'
           >
             <Editing 
               mode='row'
