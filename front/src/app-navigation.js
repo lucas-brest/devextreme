@@ -22,5 +22,10 @@ export const navigation = [
     text: 'Users',
     path: '/users',
     icon: 'group'
+  }, 
+  {
+    text: 'Ejemplos',
+    path: '/ejemplos',
+    icon: 'folder'
   }
   ];

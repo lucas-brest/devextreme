@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './users.scss';
 import { DataGrid } from 'devextreme-react';
 import { Column, Editing, EmailRule, Paging, ValidationRule } from 'devextreme-react/data-grid';
@@ -15,7 +15,6 @@ export default () => {
         <div className={'dx-card responsive-paddings'}>
           <DataGrid
             dataSource={dataSource}
-            customizeColumns={(c) => c[0].width = 60}
             // keyExpr='UserId'
           >
             <Editing 
