@@ -27,5 +27,10 @@ export const navigation = [
     text: 'Ejemplos',
     path: '/ejemplos',
     icon: 'folder'
+  }, 
+  {
+    text: 'Form',
+    path: '/form',
+    icon: 'folder'
   }
   ];
